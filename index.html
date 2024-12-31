@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEASON 3</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        .section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
+        }
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        #countdown {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+        .countdown-item {
+            text-align: center;
+        }
+        .countdown-item span {
+            font-size: 3.5rem;
+            font-weight: bold;
+        }
+        .countdown-item p {
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+        #memory-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 80%;
+            margin-bottom: 2rem;
+        }
+        .memory-item {
+            width: 150px;
+            height: 150px;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #666;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .memory-item:hover {
+            transform: scale(1.05);
+        }
+        .memory-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .resolution-container {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            margin-bottom: 2rem;
+        }
+        .resolution-column {
+            width: 45%;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        li {
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        input[type="text"], input[type="file"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        #fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+        }
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(30); opacity: 0; }
+        }
+        @keyframes rise {
+            0% { bottom: -50px; }
+            100% { bottom: 80%; }
+        }
+        #marquee {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 10px 0;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        #marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+        nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="fireworks-container"></div>
+    
+    <nav>
+        <a href="#countdown-section">Countdown</a>
+        <a href="#memories-section">Memories</a>
+        <a href="#resolutions-section">Resolutions</a>
+    </nav>
+
+    <section id="countdown-section" class="section">
+        <h1>New Year <span id="year"></span></h1>
+        <div id="countdown">
+            <div class="countdown-item">
+                <span id="days"></span>
+                <p>Days</p>
+            </div>
+            <div class="countdown-item">
+                <span id="hours"></span>
+                <p>Hours</p>
+            </div>
+            <div class="countdown-item">
+                <span id="minutes"></span>
+                <p>Minutes</p>
+            </div>
+            <div class="countdown-item">
+                <span id="seconds"></span>
+                <p>Seconds</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="memories-section" class="section">
+        <h2>Memories</h2>
+        <div id="memory-gallery"></div>
+        <div class="input-group">
+            <input type="file" id="memory-upload" accept="image/*" multiple>
+            <button onclick="addMemories()" class="btn">Add Memories</button>
+        </div>
+    </section>
+
+    <section id="resolutions-section" class="section">
+        <h2>New Year's Resolutions</h2>
+        <div class="resolution-container">
+            <div class="resolution-column">
+                <h3>Akshat's Resolutions</h3>
+                <ul id="akshat-resolutions"></ul>
+                <div class="input-group">
+                    <input type="text" id="akshat-resolution-input" placeholder="Add resolution">
+                    <button onclick="addResolution('akshat')" class="btn">Add</button>
+                </div>
+            </div>
+            <div class="resolution-column">
+                <h3>Nupur's Resolutions</h3>
+                <ul id="nupur-resolutions"></ul>
+                <div class="input-group">
+                    <input type="text" id="nupur-resolution-input" placeholder="Add resolution">
+                    <button onclick="addResolution('nupur')" class="btn">Add</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="marquee">
+        <div id="marquee-content">
+            Let’s make this year our best one yet—Season 3, here we come! ❤️
+        </div>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="new-music-video-clip_katy-perry-firework-full-song-mp3.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nextYear = new Date().getFullYear() + 1;
+            document.getElementById('year').textContent = nextYear;
+
+            // Countdown functionality
+            function updateCountdown() {
+                const now = new Date();
+                const newYear = new Date(nextYear, 0, 1);
+                const difference = newYear - now;
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+            // Play background music
+            const audio = document.getElementById('backgroundMusic');
+            audio.play();
+
+            // Create fireworks
+            setInterval(createFirework, 200);
+        });
+
+        function addMemories() {
+            const input = document.getElementById('memory-upload');
+            const gallery = document.getElementById('memory-gallery');
+            
+            for (let file of input.files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    const div = document.createElement('div');
+                    div.className = 'memory-item';
+                    div.appendChild(img);
+                    gallery.appendChild(div);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addResolution(person) {
+            const input = document.getElementById(`${person}-resolution-input`);
+            const list = document.getElementById(`${person}-resolutions`);
+            const resolution = input.value.trim();
+
+            if (resolution) {
+                const li = document.createElement('li');
+                li.textContent = resolution;
+                list.appendChild(li);
+                input.value = '';
+            }
+        }
+
+        function createFirework() {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            document.getElementById('fireworks-container').appendChild(firework);
+
+            const colors = ['#ff0', '#f0f', '#0ff', '#f00', '#0f0', '#00f'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            firework.style.left = Math.random() * 100 + 'vw';
+            firework.style.backgroundColor = color;
+            firework.style.boxShadow = `0 0 ${Math.random() * 5 + 5}px ${color}`;
+
+            firework.animate([
+                { bottom: '-50px', opacity: 1 },
+                { bottom: `${60 + Math.random() * 20}%`, opacity: 1 }
+            ], {
+                duration: 2000,
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
+
+            setTimeout(() => {
+                firework.animate([
+                    { transform: 'scale(1)', opacity: 1 },
+                    { transform: 'scale(20)', opacity: 0 }
+                ], {
+                    duration: 1000,
+                    easing: 'ease-out',
+                    fill: 'forwards'
+                });
+            }, 2000);
+
+            setTimeout(() => firework.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
